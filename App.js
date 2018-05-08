@@ -1,29 +1,33 @@
 import React, { Component } from 'react';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 import { Provider } from 'react-redux';
-import Header from './src/components/Header/Header';
-import MostPopularMovies from './src/containers/Tops/MostPopularMovies/MostPopularMovies';
-import TopRatedMovies from './src/containers/Tops/TopRatedMovies/TopRatedMovies';
-import MostPopularTV from './src/containers/Tops/MostPopularTV/MostPopularTV';
-import TopRatedTV from './src/containers/Tops/TopRatedTV/TopRatedTV';
+import Browse from './src/containers/Browse/Browse';
 import { YellowBox } from 'react-native';
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
-const BrowseNavigation = createBottomTabNavigator({
-  MostPopularMovies: { screen: MostPopularMovies },
-  TopRatedMovies: { screen: TopRatedMovies },
-  MostPopularTV: { screen: MostPopularTV },
-  TopRatedTV: { screen: TopRatedTV }
-});
-
-const Navigation = createStackNavigator({
+const Navigation = createBottomTabNavigator({
   Browse: { 
-    screen: BrowseNavigation,
+    screen: Browse,
     navigationOptions: {
-      headerTitle: <Header title="Browse" />
+      title: 'Przeglądaj'
+    }  
+  }
+},
+{
+  tabBarOptions: {
+    activeTintColor: 'white',
+    inactiveTintColor: 'rgba(255,255,255,0.5)',
+    style: {
+      backgroundColor: '#2e2e2e',
+      borderColor: '#2e2e2e',
+      borderBottomColor: '#c20114',
+      borderWidth: 1
+    },
+    indicatorStyle: {
+      backgroundColor: '#c20114'
     }
-   }
+  },
 });
 
 class App extends Component {

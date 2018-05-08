@@ -4,7 +4,7 @@ import {
 
 export default StyleSheet.create({
     container: {
-      backgroundColor: '#2e2e2e',
+      backgroundColor: 'black',
       height: '100%',
       width: '100%'
     },
