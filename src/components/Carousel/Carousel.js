@@ -15,7 +15,7 @@ const Carousel = (props) => {
     if(items) {
         displayItems = items.map((item, i) => {
             return (
-                <TouchableHighlight key={i} style={styles.item}>
+                <TouchableHighlight key={i} style={styles.item} onPress={() => props.setModalVisible(true, item.id)}>
                     <Image style={styles.image} source={{ uri: ['https://image.tmdb.org/t/p/w200/',item.poster_path].join('') }} />
                 </TouchableHighlight>
             )

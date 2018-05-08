@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import moment from 'moment';
+import Modal from 'react-native-modal';
 import Container from '../../components/Container/Container';
 import Carousel from '../../components/Carousel/Carousel';
 import Upcoming from '../../components/Upcoming/Upcoming';
+import MovieDetails from '../MovieDetails/MovieDetails';
 import { getUpcoming, getMostPopularMovies, getTopRatedMovies } from '../../actions/Movie';
 import { getMostPopularTV, getTopRatedTV } from '../../actions/Tv';
 import styles from './styles.js';
 import {
     View,
     Text,
-    ScrollView
+    ScrollView,
+    TouchableHighlight,
+    ActivityIndicator
 } from 'react-native';
 
 class Browse extends Component {
@@ -18,7 +22,10 @@ class Browse extends Component {
         topRatedMovies: null,
         mostPopularTv: null,
         topRatedTv: null,
-        upcoming: null
+        upcoming: null,
+        modalVisible: false,
+        display: false,
+        clickedItemId: null
     }
 
     componentDidMount() {
@@ -34,30 +41,59 @@ class Browse extends Component {
                 topRatedMovies,
                 mostPopularTv,
                 topRatedTv,
-                upcoming
+                upcoming,
+                display: true
             });
         })();
     }
+
+    setModalVisible = (visible, id) => {
+        this.setState({
+            modalVisible: visible,
+            clickedItemId: id
+        })
+    }
     
     render() {
-        const { mostPopularMovies, topRatedMovies, mostPopularTv, topRatedTv, upcoming } = this.state;
+        const { mostPopularMovies, topRatedMovies, mostPopularTv, topRatedTv, upcoming, modalVisible, display, clickedItemId } = this.state;
         return (
+            display ? 
+
             <ScrollView style={styles.container} >
                 <Upcoming upcoming={upcoming} />
                 <View style={styles.carousels}>
                     <Text style={styles.carouselTitle}>Najbardziej popularne filmy</Text>
-                    <Carousel items={mostPopularMovies} />
+                    <Carousel items={mostPopularMovies} setModalVisible={this.setModalVisible} />
 
                     <Text style={styles.carouselTitle}>Najwyżej oceniane filmy</Text>
-                    <Carousel items={topRatedMovies} />
+                    <Carousel items={topRatedMovies} setModalVisible={this.setModalVisible} />
 
                     <Text style={styles.carouselTitle}>Najbardziej popularne seriale</Text>
-                    <Carousel items={mostPopularTv} />
+                    <Carousel items={mostPopularTv} setModalVisible={this.setModalVisible} />
 
                     <Text style={styles.carouselTitle}>Najwyżej oceniane seriale</Text>
-                    <Carousel items={topRatedTv} />
+                    <Carousel items={topRatedTv} setModalVisible={this.setModalVisible} />
                 </View>
+
+                <Modal 
+                    animationIn='slideInRight'
+                    animationOut='slideOutRight'
+                    backdropColor='#131313'
+                    backdropOpacity={1}
+                    isVisible={modalVisible} 
+                    supportedOrientations={['portrait', 'landscape']}
+                    style={{margin: 0}}
+                    hardwareAccelerated={true}
+                    >
+                    <MovieDetails setModalVisible={this.setModalVisible} itemId={clickedItemId} />
+                </Modal>
             </ScrollView>
+
+            : 
+
+            <View style={styles.loaderContainer}>
+                <ActivityIndicator size={100} color="#c20114" />
+            </View>
         );
     }
 }
