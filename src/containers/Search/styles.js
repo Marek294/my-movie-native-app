@@ -25,9 +25,6 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    icon: {
-        color: 'rgba(255,255,255,0.7)',
-    },
     loaderContainer: {
         width: '100%',
         height: '100%',

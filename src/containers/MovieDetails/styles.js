@@ -55,8 +55,8 @@ export default StyleSheet.create({
         zIndex: 2,
         backgroundColor: 'rgba(0,0,0,0.3)'
     },
-    textPadding: {
-        padding: 10
+    marginContent: {
+        margin: 10
     },
     overview: {
         color: 'white',
@@ -101,7 +101,7 @@ export default StyleSheet.create({
     similarPoster: {
         height: 133,
         width: 90,
-        margin: 5,
+        margin: 2,
     },
     similarTitle: {
         color: 'white',

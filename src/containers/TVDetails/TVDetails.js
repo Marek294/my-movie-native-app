@@ -106,7 +106,7 @@ class TVDetails extends Component {
                         <LinearGradient colors={['transparent', '#131313']} style={{ height: 50, width: '100%' }} />
                     </View>
                 </View>
-                <View style={styles.textPadding}>
+                <View style={styles.marginContent}>
                     <View style={styles.topInfo}>
                         <Text style={styles.vote}>{tv.vote_average*10}% Ocena</Text>
                         <Text style={styles.topText} >{dates}</Text>
@@ -117,13 +117,12 @@ class TVDetails extends Component {
                     <Text style={styles.overview}>{tv.overview}</Text>
                     <Text style={styles.person}>Twórcy: {creators}</Text>
                     <Text style={styles.person}>Występuje: {tv.credits.cast[0].name}</Text>
-
-                    <View style={styles.similar}>
-                    <Text style={styles.similarTitle}>Podobne do {tv.title}</Text>
+                </View>
+                <View style={styles.similar}>
+                    <Text style={styles.similarTitle}>Podobne do {tv.name}</Text>
                     <View style={styles.similarItems}>
                         {similarMovies}
                     </View>
-                </View>
                 </View>
             </ScrollView>
 

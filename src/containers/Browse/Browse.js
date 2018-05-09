@@ -7,6 +7,7 @@ import Upcoming from '../../components/Upcoming/Upcoming';
 import MovieDetails from '../MovieDetails/MovieDetails';
 import TVDetails from '../TVDetails/TVDetails';
 import SearchBar from '../SearchBar/SearchBar';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { getUpcoming, getMostPopularMovies, getTopRatedMovies } from '../../actions/Movie';
 import { getMostPopularTV, getTopRatedTV } from '../../actions/Tv';
 import styles from './styles.js';
@@ -30,6 +31,12 @@ class Browse extends Component {
         clickedItemId: null,
         clickedType: null
     }
+
+    static navigationOptions = {
+        tabBarIcon: ({tintColor}) => (
+            <Icon name='home' size={30} style={{color: tintColor}} />
+        )
+    };
 
     componentDidMount() {
         ( async () => {

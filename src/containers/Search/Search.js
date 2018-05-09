@@ -4,6 +4,7 @@ import NoQuery from './NoQuery/NoQuery';
 import SearchResults from './SearchResults/SearchResults';
 import MovieDetails from '../MovieDetails/MovieDetails';
 import TVDetails from '../TVDetails/TVDetails';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { getSearchMovies } from '../../actions/Movie';
 import { getSearchTV } from '../../actions/Tv';
 import styles from './styles';
@@ -28,6 +29,12 @@ class SearchBar extends Component {
         clickedType: null,
         isMoved: false
     }
+
+    static navigationOptions = {
+        tabBarIcon: ({tintColor}) => (
+            <Icon name='search' size={30} style={{color: tintColor}} />
+        )
+    };
 
     static getDerivedStateFromProps(nextProps, prevState) {
         const { navigation } = nextProps;

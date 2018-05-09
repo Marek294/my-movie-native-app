@@ -13,7 +13,7 @@ const Navigation = createBottomTabNavigator({
   Browse: { 
     screen: Browse,
     navigationOptions: {
-      title: 'Przeglądaj'
+      title: 'Home'
     }  
   },
   Search: { 
@@ -25,13 +25,15 @@ const Navigation = createBottomTabNavigator({
 },
 {
   tabBarOptions: {
+    showIcon: true,
     activeTintColor: 'white',
-    inactiveTintColor: 'rgba(255,255,255,0.5)',
+    inactiveTintColor: 'rgba(255,255,255,0.2)',
     style: {
       backgroundColor: '#131313',
       borderColor: '#131313',
       borderTopColor: '#c20114',
-      borderWidth: 1
+      borderWidth: 1,
+      height: 50
     },
     indicatorStyle: {
       backgroundColor: '#c20114'

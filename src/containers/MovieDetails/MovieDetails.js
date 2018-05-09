@@ -106,13 +106,12 @@ class MovieDetails extends Component {
                     <Text style={styles.overview}>{movie.overview}</Text>
                     <Text style={styles.person}>Reżyser: {movie.credits.crew[directorId].name}</Text>
                     <Text style={styles.person}>Występuje: {movie.credits.cast[0].name}</Text>
-
-                    <View style={styles.similar}>
+                </View>
+                <View style={styles.similar}>
                     <Text style={styles.similarTitle}>Podobne do {movie.title}</Text>
                     <View style={styles.similarItems}>
                         {similarMovies}
                     </View>
-                </View>
                 </View>
             </ScrollView>
 
