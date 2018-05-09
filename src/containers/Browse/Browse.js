@@ -66,7 +66,7 @@ class Browse extends Component {
             display ? 
 
             <ScrollView style={styles.container} >
-                <SearchBar />
+                <SearchBar navigation={this.props.navigation} />
                 <Upcoming upcoming={upcoming} setModalVisible={this.setModalVisible} />
                 <View style={styles.carousels}>
                     <Text style={styles.carouselTitle}>Najbardziej popularne filmy</Text>

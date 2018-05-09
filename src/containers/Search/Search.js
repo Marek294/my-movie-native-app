@@ -1,21 +1,57 @@
 import React, { Component } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Modal from 'react-native-modal';
+import NoQuery from './NoQuery/NoQuery';
+import SearchResults from './SearchResults/SearchResults';
+import MovieDetails from '../MovieDetails/MovieDetails';
+import TVDetails from '../TVDetails/TVDetails';
+import { getSearchMovies } from '../../actions/Movie';
+import { getSearchTV } from '../../actions/Tv';
 import styles from './styles';
 import {
     View,
     Text,
     TextInput,
     TouchableHighlight,
-    Keyboard
+    Keyboard,
+    ActivityIndicator
 } from 'react-native';
 
 class SearchBar extends Component {
     state = {
         query: '',
-        isFocused: false
+        isFocused: false,
+        movieResults: null,
+        tvResults: null,
+        isLoading: false,
+        modalVisible: false,
+        clickedItemId: null,
+        clickedType: null,
+        isMoved: false
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const { navigation } = nextProps;
+        const { state } = navigation;
+      
+        if(state.params) {
+            const { query, isMoved } = state.params;
 
+            return {
+                query,
+                isMoved
+            }
+        }
+
+        return null;
+    }
+  
+    setModalVisible = (visible, id, clickedType) => {   
+        this.setState({
+            modalVisible: visible,
+            clickedItemId: id,
+            clickedType: clickedType ? clickedType : this.state.clickedType
+        })
+    }
 
     onChangeText = query => {
         this.setState({
@@ -29,29 +65,71 @@ class SearchBar extends Component {
         })
     }
 
+    submit = () => {
+        this.setState({ isLoading: true, isMoved: false });
+
+        ( async () => {
+            const { query } = this.state;
+
+            if(query) {
+                const movieResults = await getSearchMovies(query);
+                const tvResults = await getSearchTV(query);
+
+                this.setState({
+                    movieResults,
+                    tvResults
+                });
+            }
+            this.setState({
+                isLoading: false
+            });
+        })()
+    }
+
     render() {
-        const { query, isFocused } = this.state;
+        const { query, isFocused, isLoading, movieResults, tvResults, modalVisible, clickedItemId, clickedType, isMoved } = this.state;
+
+        if(isMoved) this.submit();
 
         return (
-            <TouchableHighlight style={styles.container} onPress={Keyboard.dismiss} accessible={false}>
-                <React.Fragment>
-                    { !isFocused && <Text style={styles.searchTitle} >Szukaj filmów oraz seriali spośród miliona pozycji</Text> }
-                    <TextInput 
-                        onChangeText={query => this.onChangeText(query)} 
-                        value={query} 
-                        style={styles.input} 
-                        underlineColorAndroid = "rgba(255,255,255,0.7)"
-                        placeholder = "Wpisz frazę..."
-                        placeholderTextColor = "rgba(255,255,255,0.5)"
-                        onFocus={() => this.focus(true)}
-                        onBlur={() => this.focus(false)}
+            !isLoading ? 
+            <React.Fragment>
+                { movieResults || tvResults ? 
+                    <SearchResults
+                        movieResults={movieResults}
+                        tvResults={tvResults}
+                        query={query}
+                        isFocused={isFocused}
+                        submit={this.submit}
+                        focus={this.focus}
+                        onChangeText={this.onChangeText}
+                        setModalVisible={this.setModalVisible}
                     />
-                    { !isFocused && 
-                        <TouchableHighlight style={styles.submit}>
-                                        <Icon name="search" size={50} color="white" style={styles.icon} />
-                        </TouchableHighlight> }
-                </React.Fragment>
-            </TouchableHighlight>
+                    :
+                    <NoQuery
+                        query={query}
+                        isFocused={isFocused}
+                        submit={this.submit}
+                        focus={this.focus}
+                        onChangeText={this.onChangeText}
+                    /> }
+
+                    <Modal 
+                        animationIn='slideInRight'
+                        animationOut='slideOutRight'
+                        backdropOpacity={0}
+                        isVisible={modalVisible} 
+                        style={{margin: 0}}
+                        supportedOrientations={['portrait', 'landscape']}
+                        useNativeDriver={true}
+                        >
+                        {clickedType === 'tv' ? <TVDetails setModalVisible={this.setModalVisible} itemId={clickedItemId} /> : <MovieDetails setModalVisible={this.setModalVisible} itemId={clickedItemId} /> }
+                    </Modal>
+            </React.Fragment>
+            :
+            <View style={styles.loaderContainer}>
+                <ActivityIndicator size={100} color="#c20114" />
+            </View>
         );
     }
 }

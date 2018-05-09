@@ -19,6 +19,15 @@ class SearchBar extends Component {
         })
     }
 
+    submit = () => {
+        const { query } = this.state;
+
+        this.props.navigation.navigate('Search',{
+            query,
+            isMoved: true
+          });
+    }
+
     render() {
         const { query } = this.state;
 
@@ -32,7 +41,7 @@ class SearchBar extends Component {
                     placeholder = "Wpisz frazę..."
                     placeholderTextColor = "rgba(255,255,255,0.5)"
                 />
-                <TouchableHighlight style={styles.submit}>
+                <TouchableHighlight style={styles.submit} onPress={this.submit}>
                     <Icon name="search" size={30} color="white" style={styles.icon} />
                 </TouchableHighlight>
             </View>

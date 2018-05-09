@@ -42,7 +42,9 @@ const Navigation = createBottomTabNavigator({
 class App extends Component {
   render() {
     return (
+      <React.Fragment>
         <Navigation />
+      </React.Fragment>
     );
   }
 }

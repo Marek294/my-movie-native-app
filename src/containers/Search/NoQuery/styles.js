@@ -3,12 +3,15 @@ import {
 } from 'react-native';
 
 export default StyleSheet.create({
+    scrollView: {
+        width: '100%',
+        height: '100%'
+    },
     container: {
         backgroundColor: '#131313',
         flex: 1,
         justifyContent: 'space-around',
         alignItems: 'center',
-        width: '100%',
         padding: 50
     },
     searchTitle: {
