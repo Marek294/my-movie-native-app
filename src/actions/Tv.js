@@ -4,6 +4,6 @@ export const getTopRatedTV = () => api.TV.getTopRated();
 
 export const getMostPopularTV = () => api.TV.getMostPopular();
 
-export const getTvDetails = (id) => api.TV.getTvDetails(id);
+export const getTVDetails = (id) => api.TV.getDetails(id);
 
-export const getSearchTV = (query) => api.TV.getSearchTV(query);
+export const getSearchTV = (query) => api.TV.getSearch(query);

@@ -13,18 +13,19 @@ import {
 
 const Upcoming = (props) => {
     const { upcoming } = props;
-    let item 
     
-    if(upcoming) item = upcoming[0];
+    const item = upcoming ? upcoming[0] : null;
+    const type = upcoming ? upcoming[0].name ? 'tv' : 'movie' : null;
+    
 
     return (
         item ?
         <View>
-            <Image style={styles.image} source={{ uri: ['https://image.tmdb.org/t/p/original/',item.backdrop_path].join('') }} />
+            <Image style={styles.image} source={{ uri: ['https://image.tmdb.org/t/p/w780/',item.backdrop_path].join('') }} />
             <View style={styles.overlay} />
             <View style={styles.textContainer} >
                 <Text style={styles.title}>{item.title}</Text>
-                <TouchableHighlight >
+                <TouchableHighlight onPress={() => props.setModalVisible(true, item.id, type)}>
                     <View style={styles.button}>
                         <Icon name="info-circle" size={20} color="#131313" style={styles.icon} />
                         <Text style={styles.buttonText} >Informacje</Text>

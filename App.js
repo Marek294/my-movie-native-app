@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 import { Provider } from 'react-redux';
 import Browse from './src/containers/Browse/Browse';
+import Search from './src/containers/Search/Search';
 import { 
   YellowBox
  } from 'react-native';
@@ -13,6 +14,12 @@ const Navigation = createBottomTabNavigator({
     screen: Browse,
     navigationOptions: {
       title: 'Przeglądaj'
+    }  
+  },
+  Search: { 
+    screen: Search,
+    navigationOptions: {
+      title: 'Szukaj'
     }  
   }
 },

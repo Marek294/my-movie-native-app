@@ -26,15 +26,17 @@ export default StyleSheet.create({
         textAlign: 'center'
     },
     button: {
+        display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'center',
         alignItems: 'center',
-        width: 120,
+        width: 150,
         height: 40,
         backgroundColor: 'white',
         borderRadius: 3
     },
     buttonText: {
+        marginLeft: 10,
         width: 70,
         color: '#131313'
     },

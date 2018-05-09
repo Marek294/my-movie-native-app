@@ -5,6 +5,8 @@ import Container from '../../components/Container/Container';
 import Carousel from '../../components/Carousel/Carousel';
 import Upcoming from '../../components/Upcoming/Upcoming';
 import MovieDetails from '../MovieDetails/MovieDetails';
+import TVDetails from '../TVDetails/TVDetails';
+import SearchBar from '../SearchBar/SearchBar';
 import { getUpcoming, getMostPopularMovies, getTopRatedMovies } from '../../actions/Movie';
 import { getMostPopularTV, getTopRatedTV } from '../../actions/Tv';
 import styles from './styles.js';
@@ -25,7 +27,8 @@ class Browse extends Component {
         upcoming: null,
         modalVisible: false,
         display: false,
-        clickedItemId: null
+        clickedItemId: null,
+        clickedType: null
     }
 
     componentDidMount() {
@@ -47,20 +50,24 @@ class Browse extends Component {
         })();
     }
 
-    setModalVisible = (visible, id) => {
+    setModalVisible = (visible, id, clickedType) => {
+        
         this.setState({
             modalVisible: visible,
-            clickedItemId: id
+            clickedItemId: id,
+            clickedType: clickedType ? clickedType : this.state.clickedType
         })
     }
     
     render() {
-        const { mostPopularMovies, topRatedMovies, mostPopularTv, topRatedTv, upcoming, modalVisible, display, clickedItemId } = this.state;
+        const { mostPopularMovies, topRatedMovies, mostPopularTv, topRatedTv, upcoming, modalVisible, display, clickedItemId, clickedType } = this.state;
+
         return (
             display ? 
 
             <ScrollView style={styles.container} >
-                <Upcoming upcoming={upcoming} />
+                <SearchBar />
+                <Upcoming upcoming={upcoming} setModalVisible={this.setModalVisible} />
                 <View style={styles.carousels}>
                     <Text style={styles.carouselTitle}>Najbardziej popularne filmy</Text>
                     <Carousel items={mostPopularMovies} setModalVisible={this.setModalVisible} />
@@ -78,14 +85,13 @@ class Browse extends Component {
                 <Modal 
                     animationIn='slideInRight'
                     animationOut='slideOutRight'
-                    backdropColor='#131313'
-                    backdropOpacity={1}
+                    backdropOpacity={0}
                     isVisible={modalVisible} 
-                    supportedOrientations={['portrait', 'landscape']}
                     style={{margin: 0}}
-                    hardwareAccelerated={true}
+                    supportedOrientations={['portrait', 'landscape']}
+                    useNativeDriver={true}
                     >
-                    <MovieDetails setModalVisible={this.setModalVisible} itemId={clickedItemId} />
+                    {clickedType === 'tv' ? <TVDetails setModalVisible={this.setModalVisible} itemId={clickedItemId} /> : <MovieDetails setModalVisible={this.setModalVisible} itemId={clickedItemId} /> }
                 </Modal>
             </ScrollView>
 

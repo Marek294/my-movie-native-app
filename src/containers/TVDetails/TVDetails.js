@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import _ from 'lodash';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { getMovieDetails } from '../../actions/Movie';
+import { getTVDetails } from '../../actions/Tv';
 import styles from './styles';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -14,10 +14,10 @@ import {
     ScrollView
 } from 'react-native';
 
-class MovieDetails extends Component {
+class TVDetails extends Component {
     state = {
         itemId: null,
-        movie: null
+        tv: null
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -31,14 +31,14 @@ class MovieDetails extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { movie, itemId } = this.state;
+        const { tv, itemId } = this.state;
 
-        if(!movie) {
+        if(!tv) {
             ( async () => {
-                const movie = itemId ? await getMovieDetails(itemId) : null;
+                const tv = itemId ? await getTVDetails(itemId) : null;
 
                 this.setState({
-                    movie
+                    tv
                 })
             })();
         }
@@ -53,21 +53,31 @@ class MovieDetails extends Component {
         if(hours > 0 && minutes === 0) return hours+'h ';
     }
 
-    findDirectorId(crew) {
-        return _.findIndex(crew, function(o) { return o.job === 'Director'; });
+    formatCreators(created_by) {
+        const names = created_by.map(item => item.name);
+
+        return names.join(', ');
     }
 
-    changeMovie = (id) => {
+    formatDates(first_air_date, last_air_date, in_production) {
+        const first = moment(first_air_date).format('YYYY');
+        const last = moment(last_air_date).format('YYYY');
+
+        if(in_production) return <Text>{first}{"\n"}-{"\n"}obecnie</Text>
+        else return <Text>{first}{"\n"}-{"\n"}{last}</Text>
+    }
+
+    changeTV = (id) => {
         this.setState({
             itemId: id,
-            movie: null
+            tv: null
         });
     }
 
     renderSimilar(similar) {
         return similar.results.map((item, i) => {
                     return (
-                        <TouchableHighlight key={i} onPress={() => this.changeMovie(item.id)} >
+                        <TouchableHighlight key={i} onPress={() => this.changeTV(item.id)} >
                             <Image style={styles.similarPoster} source={{ uri: ['https://image.tmdb.org/t/p/w200/',item.poster_path].join('') }} />
                         </TouchableHighlight>
                     )
@@ -75,40 +85,41 @@ class MovieDetails extends Component {
     }
 
     render() {
-        const { movie } = this.state;
+        const { tv } = this.state;
 
-        const runtime = movie ? this.formatRuntime(movie.runtime) : null;
-        const directorId = movie ? this.findDirectorId(movie.credits.crew) : null;
-        const similarMovies = movie ? this.renderSimilar(movie.recommendations) : null;
+        const runtime = tv ? this.formatRuntime(tv.episode_run_time) : null;
+        const creators = tv ? this.formatCreators(tv.created_by) : null;
+        const similarMovies = tv ? this.renderSimilar(tv.recommendations) : null;
+        const dates = tv ? this.formatDates(tv.first_air_date, tv.last_air_date, tv.in_production) : null;
 
         return (
-            movie ? 
+            tv ? 
             <ScrollView style={styles.detailsContainer}>
                 <View>
-                    <Image style={styles.image} source={{ uri: ['https://image.tmdb.org/t/p/w780/',movie.backdrop_path].join('') }} />
+                    <Image style={styles.image} source={{ uri: ['https://image.tmdb.org/t/p/w780/',tv.backdrop_path].join('') }} />
                     <View style={styles.overlay} />
                     <View style={styles.backdropContainer} >
                         <TouchableHighlight onPress={() => this.props.setModalVisible(false)}>
                             <Icon name="angle-left" size={50} color="white" style={styles.icon} />
                         </TouchableHighlight>
-                        <Text style={styles.title}>{movie.title}</Text>
+                        <Text style={styles.title}>{tv.name}</Text>
                         <LinearGradient colors={['transparent', '#131313']} style={{ height: 50, width: '100%' }} />
                     </View>
                 </View>
                 <View style={styles.textPadding}>
                     <View style={styles.topInfo}>
-                        <Text style={styles.vote}>{movie.vote_average*10}% Ocena</Text>
-                        <Text style={styles.topText} >{moment(movie.release_date).format('YYYY')}</Text>
-                        <Text style={styles.topTextProduction} >{movie.production_companies[0].name}</Text>
+                        <Text style={styles.vote}>{tv.vote_average*10}% Ocena</Text>
+                        <Text style={styles.topText} >{dates}</Text>
+                        <Text style={styles.topTextProduction} >{tv.production_companies.length && tv.production_companies[0].name}</Text>
                         <Text style={styles.topText} >{runtime}</Text>
                     </View>
 
-                    <Text style={styles.overview}>{movie.overview}</Text>
-                    <Text style={styles.person}>Reżyser: {movie.credits.crew[directorId].name}</Text>
-                    <Text style={styles.person}>Występuje: {movie.credits.cast[0].name}</Text>
+                    <Text style={styles.overview}>{tv.overview}</Text>
+                    <Text style={styles.person}>Twórcy: {creators}</Text>
+                    <Text style={styles.person}>Występuje: {tv.credits.cast[0].name}</Text>
 
                     <View style={styles.similar}>
-                    <Text style={styles.similarTitle}>Podobne do {movie.title}</Text>
+                    <Text style={styles.similarTitle}>Podobne do {tv.title}</Text>
                     <View style={styles.similarItems}>
                         {similarMovies}
                     </View>
@@ -130,4 +141,4 @@ class MovieDetails extends Component {
     }
 }
 
-export default MovieDetails;
+export default TVDetails;
